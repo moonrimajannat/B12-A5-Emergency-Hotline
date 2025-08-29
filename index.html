@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Hotline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+<nav class="flex justify-between pl-0 py-4 bg-green-50 shadow-md">
+  <div class="flex gap-2 bg-white w-full items-center px-12">
+    <img src="./assets/logo.png" width="50" height="50" alt="logo">
+    <h1 class="font-bold text-[#006747]">Emergency Service</h1>
+  </div>
+  <div class="flex items-center px-12 space-x-6 text-lg bg-white">
+    <span id="heartCount" class="bg-green-50 flex items-center space-x-1 text-red-500 rounded-3xl p-3 px-10">
+      ❤️ <span>0</span>
+    </span>
+    <span id="coinCount" class="bg-green-50 flex items-center space-x-1 text-yellow-500 rounded-3xl p-3 px-10">
+      🪙 <span>100</span>
+    </span>
+    <button id="copyCount" class="flex items-center space-x-1 bg-[#00A63E] text-white rounded-3xl p-3 px-10">
+      <span>2</span>
+      <span>Copy</span>
+    </button>
+  </div>
+</nav>
+
+
+
+  <!-- Hero Section -->
+  <section class="h-70 flex flex-col justify-between items-center py-6"
+         style="background: linear-gradient(90deg, rgba(1,49,35,1), rgba(0,103,71,1) 50%, rgba(1,50,35,1) 100%);">
+  <img src="./assets/logo-dark.png" class="w-20 h-20" alt="logo-dark">
+  <h1 class="text-2xl font-bold text-white">Emergency Service Directory</h1>
+  <p class="text-sm text-white">Government Emergency Services at Your Fingertip - A Project by Government of the People's Republic of Bangladesh</p>
+</section>
+
+  <!-- Main Section -->
+  <main class="grid grid-cols-12 gap-4 p-6">
+    <!-- Card Section -->
+    <div class="col-span-12 md:col-span-9 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cardSection">
+      <!-- Cards dynamically added here -->
+    </div>
+
+    <!-- History Section -->
+    <div class="col-span-12 md:col-span-3 bg-white p-4 rounded-lg shadow-md">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold flex items-center space-x-2">📞 <span>Call History</span></h2>
+            <button id="clearHistory" class="bg-[#00A63E] text-white rounded-3xl p-2 px-8">Clear</button>
+      </div>
+      </div>
+      <ul id="historyList" class="space-y-2 text-sm text-gray-700">
+        <!-- History added dynamically -->
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    // Data for cards
+    const services = [
+        { name: "N", en: "N", number: "9", category: "A", icon: "🚨" },
+      { name: "P", en: "P", number: "9", category: "P", icon: "👮" },
+      { name: "Fire Service Number", en: "Fire Service", number: "999", category: "Fire", icon: "🚒" },
+      
+      { name: "A", en: "A", number: "1", category: "H", icon: "🚑" },
+      { name: "W", en: "W", number: "1", category: "H", icon: "🚨" },
+      { name: "A", en: "A", number: "1", category: "G", icon: "🚨" },
+      { name: "E", en: "E", number: "1", category: "E", icon: "🚨" },
+      { name: "B", en: "B", number: "1", category: "N", icon: "🚨" },
+      { name: "B", en: "B", number: "1", category: "T", icon: "🚨" }
+    ];
+
+    let heartCount = 0;
+    let coins = 100;
+    let copyCount = 0;
+
+    const heartCountEl = document.querySelector("#heartCount span");
+    const coinCountEl = document.querySelector("#coinCount span");
+    const copyCountEl = document.querySelector("#copyCount span");
+    const cardSection = document.getElementById("cardSection");
+    const historyList = document.querySelector("#historyList");
+    const clearHistoryBtn = document.getElementById("clearHistory");
+
+    // Render cards
+    services.forEach(service => {
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-lg shadow-md p-4 flex flex-col justify-between";
+
+      card.innerHTML = `
+        <div class="flex justify-between items-center">
+        <span class="text-xl">${service.icon}</span>
+          
+          <button class="heart text-red-500">
+            <img src="./assets/heart.png" alt="heart" width="15" height="20"></button>
+        </div>
+        <div class="mt-3">
+          <h3 class="text-lg font-bold">${service.name}</h3>
+          <p class="text-sm text-gray-500">${service.en}</p>
+          <p class="text-md font-semibold mt-1">${service.number}</p>
+          <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">${service.category}</span>
+        </div>
+        <div class="flex justify-between mt-4">
+        <button 
+  class="copyBtn px-10"
+  style="box-sizing: border-box; 
+         border: 1px solid var(--Stroke, rgba(212, 214, 213, 1)); 
+         border-radius: 8px; 
+         background: var(--White, rgba(255, 255, 255, 1));">
+  📋 Copy
+</button>
+        <button class="callBtn bg-green-500 text-white p-12 py-1 rounded hover:bg-green-600">📞 Call</button>
+        </div>
+      `;
+
+      // Heart functionality
+      card.querySelector(".heart").addEventListener("click", () => {
+        heartCount++;
+        heartCountEl.textContent = heartCount;
+      });
+
+      // Copy functionality
+      card.querySelector(".copyBtn").addEventListener("click", () => {
+        navigator.clipboard.writeText(service.number);
+        alert(`${service.name} number copied: ${service.number}`);
+        copyCount++;
+        copyCountEl.textContent = copyCount;
+      });
+
+      // Call functionality
+      card.querySelector(".callBtn").addEventListener("click", () => {
+        if (coins < 20) {
+          alert("Not enough coins to make a call!");
+          return;
+        }
+        coins -= 20;
+        coinCountEl.textContent = coins;
+        const time = new Date().toLocaleTimeString();
+        alert(`Calling ${service.name} at ${service.number}`);
+        const li = document.createElement("li");
+        li.textContent = `${service.name} - ${service.number} (at ${time})`;
+        historyList.appendChild(li);
+      });
+
+      cardSection.appendChild(card);
+    });
+
+    // Clear history
+    clearHistoryBtn.addEventListener("click", () => {
+      historyList.innerHTML = "";
+    });
+  </script>
+
+</body>
+</html>
+
